@@ -1,13 +1,13 @@
 <script setup>
-
+  import Header from './components/Header.vue';
+  import { RouterView } from 'vue-router';
 </script>
 
 <template>
   
-  <h1>Desde Pinia</h1>
-  <button>Boton</button>
+  <Header />
+
+  <main class="container mx-auto mt-10">
+    <RouterView />
+  </main>
 </template>
-
-<style scoped>
-
-</style>
