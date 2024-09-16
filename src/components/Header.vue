@@ -1,10 +1,19 @@
 <script setup>
-import { RouterLink } from 'vue-router';
+    import { RouterLink, useRoute } from 'vue-router';
+    import { computed } from 'vue';
+
+    const route = useRoute();
+
+    const paginaInicio = computed(()=> route.name === 'inicio');
+
+
+    
 </script>
 
 <template>
 
-    <header class="bg-slate-700">
+    <header class="bg-slate-700"
+    :class="{header: paginaInicio}">
         <div class="mx-auto container px-5 py-16">
 
             <div class="flex justify-between items-center">
@@ -19,8 +28,8 @@ import { RouterLink } from 'vue-router';
                 <nav class="flex gap-4">
                     <RouterLink 
                         class="text-white uppercase font-bold"
+                        active-class="text-orange-400"
                         :to="{name: 'inicio'}"
-                        active-class="text-orange-500"
                     >
                         Inicio
                     </RouterLink>
@@ -28,7 +37,7 @@ import { RouterLink } from 'vue-router';
                     <RouterLink 
                         class="text-white uppercase font-bold"
                         :to="{name: 'favoritos'}"
-                        active-class="text-orange-500"
+                        active-class="text-orange-400"
                     >
                         Favoritos
                     </RouterLink>
@@ -37,7 +46,8 @@ import { RouterLink } from 'vue-router';
 
             </div>
 
-            <form class="md:w-1/2 2xl:2-1/3 bg-orange-400 my-32 p-10 rounded-lg shadow space-y-6">
+            <form class="md:w-1/2 2xl:2-1/3 bg-orange-400 my-32 p-10 rounded-lg shadow space-y-6"
+            v-if="paginaInicio">
                 <div class="space-y-4">
                     <label 
                         class="block text-white uppercase font-extrabold text-lg"
@@ -83,4 +93,13 @@ import { RouterLink } from 'vue-router';
     </header>
 
 </template>
+
+<style>
+    .header {
+        background-image: url('../../public/img/bg.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+
+</style>
 
