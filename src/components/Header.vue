@@ -1,8 +1,11 @@
 <script setup>
     import { RouterLink, useRoute } from 'vue-router';
     import { computed } from 'vue';
+    import { useBebidasStore } from '@/stores/bebidas';
 
     const route = useRoute();
+    const store = useBebidasStore();
+    console.log(store.categorias)
 
     const paginaInicio = computed(()=> route.name === 'inicio');
 
@@ -28,7 +31,7 @@
                 <nav class="flex gap-4">
                     <RouterLink 
                         class="text-white uppercase font-bold"
-                        active-class="text-orange-400"
+                        active-class="text-orange-500"
                         :to="{name: 'inicio'}"
                     >
                         Inicio
@@ -37,7 +40,7 @@
                     <RouterLink 
                         class="text-white uppercase font-bold"
                         :to="{name: 'favoritos'}"
-                        active-class="text-orange-400"
+                        active-class="text-orange-500"
                     >
                         Favoritos
                     </RouterLink>
@@ -74,9 +77,14 @@
                         id="ingrediente"
                         class="p-3 w-full rounded-lg focus:outline-none"
                     >
-
                         <option value="">-- Seleccione --</option>
-
+                        <option 
+                            v-for="categoria in store.categorias" 
+                            :key="categoria.strCategory"
+                            :value="categoria.strCategory"
+                        >
+                            {{ categoria.strCategory }}
+                        </option>
                     </select>
                 </div>
 
@@ -99,6 +107,19 @@
         background-image: url('../../public/img/bg.jpg');
         background-size: cover;
         background-position: center;
+    }
+
+    .text-white {
+        color: white;
+    }
+     
+    .text-orange-500 {
+        color: orange;
+    }
+     
+    /* Estilo para cuando el enlace está activo */
+    .text-orange-500.font-bold {
+        font-weight: bold;
     }
 
 </style>
