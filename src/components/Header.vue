@@ -5,11 +5,14 @@
 
     const route = useRoute();
     const store = useBebidasStore();
-    console.log(store.categorias)
 
     const paginaInicio = computed(()=> route.name === 'inicio');
 
+    const handleSubmit = () => {
+        //TO DO: Validar
 
+        store.obtenerRecetas();
+    }
     
 </script>
 
@@ -49,8 +52,11 @@
 
             </div>
 
-            <form class="md:w-1/2 2xl:2-1/3 bg-orange-400 my-32 p-10 rounded-lg shadow space-y-6"
-            v-if="paginaInicio">
+            <form 
+                v-if="paginaInicio"
+                class="md:w-1/2 2xl:2-1/3 bg-orange-400 my-32 p-10 rounded-lg shadow space-y-6"
+                @submit.prevent="handleSubmit"
+            >
                 <div class="space-y-4">
                     <label 
                         class="block text-white uppercase font-extrabold text-lg"
@@ -63,6 +69,7 @@
                         id="ingrediente"
                         class="p-3 w-full rounded-lg focus:outline-none"
                         placeholder="Nombre o Ingrediente: ej. Vodka, Tequila, etc"
+                        v-model="store.busqueda.nombre"
                     >
                 </div>
 
@@ -76,6 +83,7 @@
                     <select 
                         id="ingrediente"
                         class="p-3 w-full rounded-lg focus:outline-none"
+                        v-model="store.busqueda.categoria"
                     >
                         <option value="">-- Seleccione --</option>
                         <option 

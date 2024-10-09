@@ -1,21 +1,43 @@
 import { defineStore } from "pinia";
-import { ref, onMounted } from "vue";
-import axios from "axios";
+import { ref, onMounted, reactive } from "vue";
+import apiService from "@/services/apiService";
+import { useModalStore } from "./modal";
 
 export const useBebidasStore = defineStore('bebidas',()=>{
 
+    const modal = useModalStore()
+
     const categorias = ref([])
-    const url = `https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list`;
+    const busqueda = reactive({
+        nombre: '',
+        categoria: ''
+    });
+
+    const recetas = ref([])
+    const bebida = ref({})
 
     onMounted(async () => {
-        const { data } = await axios(url);
+        const { data } = await apiService.obtenerCategorias();
         categorias.value = data.drinks;
-        console.log(categorias.value)
+    })
+
+    async function obtenerRecetas(){
+        const { data: {drinks} } = await apiService.buscarRecetas(busqueda);
+        recetas.value = drinks
     }
 
-    )
+    async function seleccionarBebida(id){
+        const { data: {drinks} } = await apiService.buscarReceta(id)
+        bebida.value = drinks[0]
+        modal.handleClickModal()
+    }
 
     return { 
-        categorias 
+        categorias,
+        busqueda,
+        recetas,
+        bebida,
+        obtenerRecetas,
+        seleccionarBebida
     }
 })
