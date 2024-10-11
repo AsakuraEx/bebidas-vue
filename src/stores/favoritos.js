@@ -1,10 +1,14 @@
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { defineStore } from "pinia";
 import { useBebidasStore } from "./bebidas";
+import { useModalStore } from "./modal";
+import { useNotificacionStore } from "./notificacion";
 
 export const useFavoritosStore = defineStore('favoritos', ()=>{
 
     const bebidas = useBebidasStore()
+    const modal = useModalStore()
+    const notificacion = useNotificacionStore()
     const favoritos = ref([])
 
     onMounted(()=>{
@@ -26,17 +30,34 @@ export const useFavoritosStore = defineStore('favoritos', ()=>{
         return favoritosLocalStorage.some(favorito => favorito.idDrink === id)
     }
 
-    function handleClickFavorito() {
-        if(existeFavorito(bebidas.bebida.idDrink)){
-            console.log("Ya existe la receta en favoritos...")
-        }else{
-            favoritos.value.push(bebidas.bebida)
-        }
-
+    function eliminarFavorito() {
+        favoritos.value = favoritos.value.filter( favorito => favorito.idDrink !== bebidas.bebida.idDrink);
+        notificacion.show = true;
+        notificacion.texto = 'Se eliminó la receta de sus favoritos'
     }
+
+    function agregarFavorito() {
+        favoritos.value.push(bebidas.bebida)
+        notificacion.show = true;
+        notificacion.texto = 'Se ha agregado la receta a sus favoritos'
+    }
+
+    function handleClickFavorito(e) {
+        if(existeFavorito(bebidas.bebida.idDrink)){
+            eliminarFavorito()
+            //e.target.textContent = 'Agregar a Favoritos'
+        }else{
+            agregarFavorito()
+            //e.target.textContent = 'Eliminar de Favoritos'
+        }
+        modal.modal = false
+    }
+
+    const noFavoritos = computed(()=> favoritos.value.length === 0)
 
     return {
         favoritos,
+        noFavoritos,
         handleClickFavorito,
         existeFavorito
     }
